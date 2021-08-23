@@ -1,3 +1,4 @@
+# ORIGINAL PROJECT: https://github.com/penny4860/SVHN-deep-digit-detector/tree/master/digit_detector
 # SVHN-deep-cnn-digit-detector
 
 This project implements deep-cnn-detector (and recognizer) in natural scene. I used keras framework and opencv library to build the detector.
