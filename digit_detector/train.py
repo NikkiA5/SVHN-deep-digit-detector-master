@@ -26,26 +26,26 @@ def train_detector(X_train, X_test, Y_train, Y_test, nb_filters = 32, batch_size
     model = Sequential()
     model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1],
                             border_mode='valid',
-                            input_shape=input_shape))
-    model.add(Activation('relu'))
-    model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1]))
-    model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=pool_size))
+                            input_shape=input_shape, name='covolution2d_1'))
+    model.add(Activation('relu', name='activation_1'))
+    model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1], name='covolution2d_2'))
+    model.add(Activation('relu', name='activation_2'))
+    model.add(MaxPooling2D(pool_size=pool_size, name='maxpooling2d_1'))
     # (16, 8, 32)
      
-    model.add(Convolution2D(nb_filters*2, kernel_size[0], kernel_size[1]))
-    model.add(Activation('relu'))
-    model.add(Convolution2D(nb_filters*2, kernel_size[0], kernel_size[1]))
-    model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=pool_size))
+    model.add(Convolution2D(nb_filters*2, kernel_size[0], kernel_size[1], name='covolution2d_3'))
+    model.add(Activation('relu', name='activation_3'))
+    model.add(Convolution2D(nb_filters*2, kernel_size[0], kernel_size[1], name='covolution2d_4'))
+    model.add(Activation('relu', name='activation_4'))
+    model.add(MaxPooling2D(pool_size=pool_size, name='maxpooling2d_2'))
     # (8, 4, 64) = (2048)
         
-    model.add(Flatten())
-    model.add(Dense(1024))
-    model.add(Activation('relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(nb_classes))
-    model.add(Activation('softmax'))
+    model.add(Flatten(name='flatten_1'))
+    model.add(Dense(1024, name='dense_1'))
+    model.add(Activation('relu'), name='activation_5')
+    model.add(Dropout(0.5, name='dropout_1'))
+    model.add(Dense(nb_classes, name='dense_2'))
+    model.add(Activation('softmax'), name='activation_6')
         
     model.compile(loss='categorical_crossentropy',
                   optimizer='adadelta',
