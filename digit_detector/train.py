@@ -24,18 +24,18 @@ def train_detector(X_train, X_test, Y_train, Y_test, nb_filters = 32, batch_size
 
 
     model = Sequential()
-    model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1],
+    model.add(Convolution2D(filters=nb_filters, kernel_size=(3,3),
                             border_mode='valid',
                             input_shape=input_shape, name='covolution2d_1'))
     model.add(Activation('relu', name='activation_1'))
-    model.add(Convolution2D(nb_filters, kernel_size[0], kernel_size[1], name='covolution2d_2'))
+    model.add(Convolution2D(filters=nb_filters, kernel_size=(3,3), name='covolution2d_2'))
     model.add(Activation('relu', name='activation_2'))
     model.add(MaxPooling2D(pool_size=pool_size, name='maxpooling2d_1'))
     # (16, 8, 32)
      
-    model.add(Convolution2D(nb_filters*2, kernel_size[0], kernel_size[1], name='covolution2d_3'))
+    model.add(Convolution2D(filters=nb_filters*2, kernel_size=(3,3), name='covolution2d_3'))
     model.add(Activation('relu', name='activation_3'))
-    model.add(Convolution2D(nb_filters*2, kernel_size[0], kernel_size[1], name='covolution2d_4'))
+    model.add(Convolution2D(filters=nb_filters*2, kernel_size=(3,3), name='covolution2d_4'))
     model.add(Activation('relu', name='activation_4'))
     model.add(MaxPooling2D(pool_size=pool_size, name='maxpooling2d_2'))
     # (8, 4, 64) = (2048)
