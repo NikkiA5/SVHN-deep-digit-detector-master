@@ -13,10 +13,10 @@ class Extractor:
         overlap_calculator : OverlapCalculator
             instance of OverlapCalculator class
         """
-        self._positive_samples = np.array([])
-        self._negative_samples = np.array([])
-        self._positive_labels = np.array([])
-        self._negative_labels = np.array([])
+        self._positive_samples = []
+        self._negative_samples = []
+        self._positive_labels = []
+        self._negative_labels = []
         
         self._region_proposer = region_proposer
         self._annotator = annotator
@@ -43,9 +43,9 @@ class Extractor:
             overlaps = self._overlap_calculator.calc_ious_per_truth(candidate_boxes, true_boxes)
 
             # 4. add patch to the samples
-            self._select_positive_patch(self, candidate_patches, true_labels, overlaps, positive_overlap_thd)
-            self._append_positive_patch(self, true_patches, true_labels)
-            self._select_negative_patch(self, candidate_patches, overlaps, negative_overlap_thd)
+            self._positive_samples, self._positive_labels = self._select_positive_patch(candidate_patches, true_labels, overlaps, positive_overlap_thd)
+            self._positive_samples, self._positive_labels = self._append_positive_patch(true_patches, true_labels)
+            self._negative_samples = self._select_negative_patch(candidate_patches, overlaps, negative_overlap_thd)
            
             bar.update(i)
         bar.finish()
@@ -53,8 +53,7 @@ class Extractor:
         return self._merge_sample()
     
     def _append_positive_patch(self, true_patches, true_labels):
-        self._positive_samples.append(true_patches)
-        self._positive_labels.append(true_labels)
+        return self._positive_samples.append(true_patches), self._positive_labels.append(true_labels)
         
     def _select_positive_patch(self, candidate_patches, true_labels, overlaps, overlap_thd):
         for i, label in enumerate(true_labels):
@@ -62,18 +61,18 @@ class Extractor:
             labels_ = np.zeros((len(samples), )) + label
             self._positive_samples.append(samples)
             self._positive_labels.append(labels_)
+        return self._positive_samples, self._positive_labels
     
     def _select_negative_patch(self, candidate_patches, overlaps, overlap_thd):
         overlaps_max = np.max(overlaps, axis=0)
-        self._negative_samples.append(candidate_patches[overlaps_max<overlap_thd])
+        return self._negative_samples.append(candidate_patches[overlaps_max<overlap_thd])
 
     def _merge_sample(self):
-        negative_samples = np.concatenate(self._negative_samples, axis=0)    
+        negative_samples = self._negative_samples   
         negative_labels = np.zeros((len(negative_samples), 1))
-        positive_samples = np.concatenate(self._positive_samples, axis=0)    
-        positive_labels = np.concatenate(self._positive_labels, axis=0).reshape(-1,1)
+        positive_samples = self._positive_samples  
+        positive_labels = np.array(self._positive_labels).reshape(-1,1)
 
         samples = np.concatenate([negative_samples, positive_samples], axis=0)
         labels = np.concatenate([negative_labels, positive_labels], axis=0)
         return samples, labels
-
