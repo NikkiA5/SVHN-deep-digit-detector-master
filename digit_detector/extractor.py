@@ -43,9 +43,9 @@ class Extractor:
             overlaps = self._overlap_calculator.calc_ious_per_truth(candidate_boxes, true_boxes)
 
             # 4. add patch to the samples
-            self._select_positive_patch(candidate_patches, true_labels, overlaps, positive_overlap_thd)
-            self._append_positive_patch(true_patches, true_labels)
-            self._select_negative_patch(candidate_patches, overlaps, negative_overlap_thd)
+            self._select_positive_patch(self, candidate_patches, true_labels, overlaps, positive_overlap_thd)
+            self._append_positive_patch(self, true_patches, true_labels)
+            self._select_negative_patch(self, candidate_patches, overlaps, negative_overlap_thd)
            
             bar.update(i)
         bar.finish()
