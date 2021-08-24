@@ -13,10 +13,10 @@ class Extractor:
         overlap_calculator : OverlapCalculator
             instance of OverlapCalculator class
         """
-        self._positive_samples = []
-        self._negative_samples = []
-        self._positive_labels = []
-        self._negative_labels = []
+        self._positive_samples = np.array([])
+        self._negative_samples = np.array([])
+        self._positive_labels = np.array([])
+        self._negative_labels = np.array([])
         
         self._region_proposer = region_proposer
         self._annotator = annotator
